@@ -9,36 +9,36 @@ function App() {
   const shortUrl = useRef(null);
 
   const handleSubmit = (e) => {
-    // e.preventDefault();
-    // setLoading(true);
-    // setError("");
-    // fetch("/api/shorten", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     originalUrl: originalUrl,
-    //   }),
-    // })
-    //   .then((res) => res.json())
-    //   .then((data) => {
-    //     if (data.error) {
-    //       setError(data.error);
-    //       setLoading(false);
-    //     } else {
-    //       shortUrl.current = data.shortUrl;
-    //       setLoading(false);
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     setError("Something went wrong");
-    //     setLoading(false);
-    //   });
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    fetch("/api/shorten", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        originalUrl: originalUrl,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error) {
+          setError(data.error);
+          setLoading(false);
+        } else {
+          shortUrl.current = data.shortUrl;
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
+        setError("Something went wrong");
+        setLoading(false);
+      });
   };
 
   const copyToClipboard = () => {
-    // navigator.clipboard.writeText(shortUrl.current);
+    navigator.clipboard.writeText(shortUrl.current);
   };
 
   return (
