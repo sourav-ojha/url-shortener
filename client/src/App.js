@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import "./App.css";
+import { REACT_APP_API_URL } from "./constants";
 
 function App() {
   const [originalUrl, setOriginalUrl] = useState("");
@@ -12,7 +13,7 @@ function App() {
     e.preventDefault();
     setLoading(true);
     setError("");
-    fetch("/api/shorten", {
+    fetch(`${REACT_APP_API_URL}/api/shorten`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -27,7 +28,7 @@ function App() {
           setError(data.error);
           setLoading(false);
         } else {
-          shortUrl.current = data.shortUrl;
+          shortUrl.current = `${REACT_APP_API_URL}/${data.id}`;
           setLoading(false);
         }
       })
@@ -44,6 +45,8 @@ function App() {
   return (
     <div className="App">
       <div className="App-header">
+        {error && <p className="error">{error}</p>}
+        {loading && <p className="loading">Loading...</p>}
         <form onSubmit={handleSubmit} className="longBlock">
           <input
             type="text"
@@ -52,7 +55,7 @@ function App() {
             onChange={(e) => setOriginalUrl(e.target.value)}
             placeholder="paste your long url"
           />
-          <button className="shortButton" type="submit">
+          <button className="shortButton" type="submit" disabled={loading}>
             Shorten
           </button>
         </form>
