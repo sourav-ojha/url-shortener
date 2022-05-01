@@ -1,7 +1,7 @@
 const { Router } = require("express");
 let router = Router();
 const fs = require("fs");
-const nanoId = require("nanoid");
+const { nanoid } = require("nanoid");
 router.get("/", (req, res) => {
   res.json("yahoo!!");
 });
@@ -12,25 +12,28 @@ router.get("/:id", (req, res) => {
   let parsedData = JSON.parse(data);
   parsedData.count++;
   fs.writeFileSync(`./data/${id}.json`, JSON.stringify(parsedData));
-  fs.writeFileSync(
+  fs.appendFile(
     `./log.json`,
     JSON.stringify({
       date: new Date(),
       id: id,
       url: parsedData.url,
-      title: parsedData.title,
       action: "visit",
-    })
+      status: "success",
+    }),
+    (err) => {
+      throw err;
+    }
   );
 
   return res.redirect(`${parsedData.url}`);
 });
 
-router.post("/", (req, res) => {
-  const newID = nanoId(4);
-  console.log(req.body, newID);
+router.post("/shorten", (req, res) => {
+  const newID = nanoid(4);
+  const { originalUrl } = req.body;
   let payload = {
-    ...req.body,
+    url: originalUrl,
     count: 0,
     id: newID,
   };
@@ -40,32 +43,41 @@ router.post("/", (req, res) => {
         `./log.json`,
         JSON.stringify({
           date: new Date(),
-          id: id,
-          url: parsedData.url,
-          title: parsedData.title,
-          action: "error",
+          id: newID,
+          url: originalUrl,
+          action: "create",
+          status: "success",
+          message: err.message,
         })
       );
       res.json({
         status: false,
-        message: "error",
+        message: err.message,
       });
     } else {
-      fs.writeFileSync(
+      fs.appendFile(
         `./log.json`,
         JSON.stringify({
           date: new Date(),
-          id: id,
-          url: parsedData.url,
-          title: parsedData.title,
+          id: newID,
+          url: originalUrl,
           action: "created",
-        })
+        }),
+        (err) => {
+          if (err) {
+            res.json({
+              status: false,
+              message: err.message,
+            });
+          } else {
+            res.json({
+              status: true,
+              message: "success",
+              id: newID,
+            });
+          }
+        }
       );
-      res.json({
-        status: true,
-        message: "success",
-        id: newID,
-      });
     }
   });
 });
