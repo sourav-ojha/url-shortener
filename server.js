@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const APIroutes = require("./routes");
+const connectDB = require("./config/db");
 class Server {
   constructor() {
     this.app = express();
@@ -17,9 +18,15 @@ class Server {
     // this.app.use("/shtly", path )
   }
   listen() {
-    this.app.listen(this.port, () => {
-      console.log("server started at :", this.port);
-    });
+    connectDB()
+      .then(() => {
+        this.app.listen(this.port, () => {
+          console.log("server started at :", this.port);
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 }
 
