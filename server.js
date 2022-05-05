@@ -20,6 +20,7 @@ class Server {
   listen() {
     connectDB()
       .then(() => {
+        console.log("mogo db connected");
         this.app.listen(this.port, () => {
           console.log("server started at :", this.port);
         });
