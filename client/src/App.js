@@ -28,7 +28,7 @@ function App() {
           setError(data.error);
           setLoading(false);
         } else {
-          shortUrl.current = `${REACT_APP_API_URL}/${data.id}`;
+          shortUrl.current = `${REACT_APP_API_URL}/api/${data.id}`;
           setLoading(false);
         }
       })

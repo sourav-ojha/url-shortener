@@ -1,6 +1,7 @@
 const Url = require("../models/url");
+const { nanoid } = require("nanoid");
 
-export const CreateUrl = async (url) => {
+const CreateUrl = async (url) => {
   try {
     const id = nanoid(4);
     const newUrl = new Url({
@@ -22,20 +23,20 @@ export const CreateUrl = async (url) => {
   }
 };
 
-export const GetUrl = async (id) => {
+const GetUrl = async (id) => {
   try {
-    const url = await Url.findOne({ id });
-    // if (url == undefined)
-    //   return {
-    //     status: false,
-    //     statusCode: 404,
-    //     message: "url not found",
-    //   };
+    const data = await Url.findOne({ id });
+    if (!data || data === null || data === undefined)
+      return {
+        status: false,
+        statusCode: 404,
+        message: "url not found",
+      };
 
     return {
       status: true,
       message: "success",
-      url,
+      url: data.url,
     };
   } catch (err) {
     return {
@@ -43,4 +44,9 @@ export const GetUrl = async (id) => {
       message: err.message,
     };
   }
+};
+
+module.exports = {
+  CreateUrl,
+  GetUrl,
 };
