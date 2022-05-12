@@ -33,6 +33,8 @@ const GetUrl = async (id) => {
         message: "url not found",
       };
 
+    await Url.findOneAndUpdate({ id }, { $inc: { count: 1 } });
+
     return {
       status: true,
       message: "success",

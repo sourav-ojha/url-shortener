@@ -9,6 +9,8 @@ class Server {
     this.port = process.env.PORT || 8080;
     this.middlewares();
     this.routes();
+    // static file
+    this.app.use(express.static(path.join(__dirname, "./build")));
   }
   middlewares() {
     this.app.use(cors());
@@ -20,7 +22,9 @@ class Server {
       console.log(path.join(__dirname, "./404.html"));
       res.sendFile(path.join(__dirname, "./404.html"));
     });
-    // this.app.use("/shtly", path )
+    this.app.get("/so", (req, res) =>
+      res.sendFile(path.join(__dirname, "./build/index.html"))
+    );
   }
   listen() {
     connectDB()
