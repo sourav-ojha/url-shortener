@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const APIroutes = require("./routes");
 const connectDB = require("./config/db");
+const path = require("path");
 class Server {
   constructor() {
     this.app = express();
@@ -15,6 +16,10 @@ class Server {
   }
   routes() {
     this.app.use("/api", APIroutes);
+    this.app.get("/404-not-found", (req, res) => {
+      console.log(path.join(__dirname, "./404.html"));
+      res.sendFile(path.join(__dirname, "./404.html"));
+    });
     // this.app.use("/shtly", path )
   }
   listen() {

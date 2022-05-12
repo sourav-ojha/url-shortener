@@ -1,4 +1,5 @@
 const { Router } = require("express");
+const { GetUrl, CreateUrl } = require("./controller/urlShortner");
 let router = Router();
 const fs = require("fs");
 router.get("/", (req, res) => {
@@ -8,10 +9,12 @@ router.get("/", (req, res) => {
 router.get("/:id", async (req, res) => {
   let id = req.params.id;
   let { status, message, url } = await GetUrl(id);
+  console.log(status, message, url);
   if (status) {
     return res.redirect(`${url}`);
   } else {
-    return res.json({ status, message });
+    console.log("redirect to 404");
+    return res.redirect("http://localhost:8080/404-not-found");
   }
 });
 
