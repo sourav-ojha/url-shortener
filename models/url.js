@@ -15,6 +15,18 @@ const urlSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    // array of objects
+    stats: [
+      {
+        date: {
+          type: String,
+        },
+        count: {
+          type: Number,
+          default: 0,
+        },
+      },
+    ],
   },
   { timestamps: true }
 );
