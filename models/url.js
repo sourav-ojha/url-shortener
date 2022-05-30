@@ -2,9 +2,16 @@ const mongoose = require("mongoose");
 
 const urlSchema = new mongoose.Schema(
   {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "users",
+    },
     url: {
       type: String,
       required: true,
+    },
+    title: {
+      type: String,
     },
     count: {
       type: Number,
