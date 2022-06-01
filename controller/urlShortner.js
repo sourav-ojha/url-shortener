@@ -1,7 +1,7 @@
 const Url = require("../models/url");
 const { nanoid } = require("nanoid");
 
-const CreateUrl = async (url) => {
+const CreateUrl = async (url, title, user) => {
   try {
     const id = nanoid(4);
     const today = new Date();
@@ -11,6 +11,8 @@ const CreateUrl = async (url) => {
     let curDate = `${todayDate}-${todayMonth}-${todayYear}`;
     const newUrl = new Url({
       url,
+      title,
+      user: user.id,
       id,
       count: 0,
       stats: [
@@ -47,6 +49,7 @@ const GetUrl = async (id) => {
     // update daily count and total count
     const { stats } = data;
     const today = new Date();
+
     const todayDate = today.getDate();
     const todayMonth = today.getMonth();
     const todayYear = today.getFullYear();
@@ -80,7 +83,48 @@ const GetUrl = async (id) => {
   }
 };
 
+const GetUserUrls = async (user) => {
+  try {
+    console.log(user.id);
+    const data = await Url.find({ user: user.id });
+    return {
+      status: true,
+      message: "success",
+      data,
+    };
+  } catch (err) {
+    return {
+      status: false,
+      message: err.message,
+    };
+  }
+};
+
+const GetUrlDetails = async (id, user) => {
+  try {
+    const data = await Url.findOne({ id, user: user.id });
+    if (!data || data === null || data === undefined)
+      return {
+        status: false,
+        statusCode: 404,
+        message: "url not found",
+      };
+    return {
+      status: true,
+      message: "success",
+      data,
+    };
+  } catch (err) {
+    return {
+      status: false,
+      message: err.message,
+    };
+  }
+};
+
 module.exports = {
   CreateUrl,
   GetUrl,
+  GetUserUrls,
+  GetUrlDetails,
 };
