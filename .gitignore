@@ -23,8 +23,12 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+env
+.env
+
 # client
 client/yarn.lock
 client/package-lock.json
 package-lock.json
 client/node_modules
+client/.env
