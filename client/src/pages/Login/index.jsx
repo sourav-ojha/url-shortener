@@ -1,12 +1,22 @@
 import Navbar from "components/Navbar";
-import React from "react";
+import { useAuth } from "context/AuthContext";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import LoginForm from "./LoginForm";
 import "./style.css";
 const Login = () => {
+  const { isLoggedIn, isLoading } = useAuth();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/dashboard");
+    }
+  }, [isLoggedIn, navigate]);
+
   return (
     <div className=" loginBlock">
       <div className="absolute loginOverlay"></div>
-      <div className=" container flex-1 z-10 ">
+      <div className="  flex-1 z-10 ">
         <Navbar />
         <div className="flex h-full">
           <LoginForm />

@@ -1,10 +1,15 @@
+import { register } from "actions/auth";
 import Submit from "components/Buttons/Submit";
 import TextField from "components/Input/TextField";
+import { Toast } from "components/Toast";
+import { useAuth } from "context/AuthContext";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
+  const { login } = useAuth();
+  const navigate = useNavigate();
   const [mode, setMode] = React.useState("login");
-
   const [formData, setFormData] = React.useState({
     firstName: "",
     lasstName: "",
@@ -23,9 +28,46 @@ const LoginForm = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (mode === "login") console.log(formData);
+    if (!formData.email || !formData.password) {
+      Toast.fire({
+        title: "Please fill out all fields",
+        icon: "error",
+      });
+      return;
+    }
+    if (mode === "login") {
+      let payload = {
+        email: formData.email,
+        password: formData.password,
+      };
+      let res = await login(payload);
+      if (res.status) {
+        navigate("/me");
+      } else {
+        Toast.fire({
+          title: res.message,
+          icon: "error",
+        });
+      }
+    } else if (mode === "signup") {
+      if (!formData.firstName || !formData.lastName) {
+        Toast.fire({
+          title: "Please fill out all fields",
+          icon: "error",
+        });
+        return;
+      }
+      let payload = {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        password: formData.password,
+      };
+      let res = await register(payload);
+      console.log(res);
+    }
   };
 
   return (
@@ -49,15 +91,15 @@ const LoginForm = () => {
           {mode === "signup" && (
             <div className="flex gap-5 ">
               <TextField
-                name="first_name"
-                value={formData.email}
+                name="firstName"
+                value={formData.firstName}
                 onChange={handleChange}
                 required
                 label="First Name"
               />
               <TextField
-                name="last_name"
-                value={formData.email}
+                name="lastName"
+                value={formData.lastName}
                 onChange={handleChange}
                 required
                 label="Last Name"
@@ -73,7 +115,7 @@ const LoginForm = () => {
           />
           <TextField
             name="password"
-            value={formData.email}
+            value={formData.password}
             onChange={handleChange}
             required
             label="Password"

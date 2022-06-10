@@ -1,0 +1,12 @@
+.dashboardBlock {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: black;
+  color: white;
+}
+
+.swal2-input-textarea {
+  width: 338px !important;
+}
