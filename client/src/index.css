@@ -16,3 +16,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.navbar {
+  /* colourful gradient box shadow */
+  padding: 1px;
+  box-shadow: 0px 0px 10px 0px rgba(15, 215, 237, 0.288);
+}
